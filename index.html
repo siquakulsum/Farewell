@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Farewell Countdown | Kulsum & Munaza</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;700&family=Outfit:wght@300;500;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff7e5f;
+            --secondary: #feb47b;
+            --accent: #ffcc33;
+            --bg-dark: #1a1a2e;
+            --text-light: #ffffff;
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #2d3436 0%, #000000 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #bg-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container {
+            z-index: 10;
+            text-align: center;
+            width: 90%;
+            max-width: 800px;
+            padding: 2rem;
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            margin-bottom: 3rem;
+            opacity: 0.8;
+        }
+
+        .countdown-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .time-box {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            padding: 1.5rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            transition: transform 0.3s ease;
+        }
+
+        .time-box:hover {
+            transform: translateY(-10px) scale(1.05);
+            border-color: var(--primary);
+        }
+
+        .time-value {
+            font-size: clamp(1.5rem, 5vw, 3rem);
+            font-weight: 800;
+            display: block;
+        }
+
+        .time-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.7;
+        }
+
+        .message-card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            padding: 2rem;
+            border-radius: 30px;
+            margin-top: 2rem;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: slideUp 1s ease-out 0.5s both;
+        }
+
+        .message-card:hover {
+            box-shadow: 0 20px 60px rgba(255, 126, 95, 0.2);
+        }
+
+        .daily-message {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            font-style: italic;
+            margin-bottom: 1.5rem;
+        }
+
+        .special-line {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            border-top: 1px solid var(--glass-border);
+            padding-top: 1rem;
+            font-weight: 300;
+        }
+
+        .footer-names {
+            margin-top: 3rem;
+            font-size: 1.1rem;
+            opacity: 0.6;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .heart {
+            position: absolute;
+            pointer-events: none;
+            animation: burst 1s ease-out forwards;
+        }
+
+        @keyframes burst {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(2) translateY(-100px) rotate(45deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .countdown-grid {
+                gap: 0.5rem;
+            }
+
+            .time-box {
+                padding: 1rem 0.5rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="container">
+        <h1>College Farewell</h1>
+        <div class="subtitle">Counting down to March 14</div>
+
+        <div class="countdown-grid">
+            <div class="time-box">
+                <span class="time-value" id="days">00</span>
+                <span class="time-label">Days</span>
+            </div>
+            <div class="time-box">
+                <span class="time-value" id="hours">00</span>
+                <span class="time-label">Hours</span>
+            </div>
+            <div class="time-box">
+                <span class="time-value" id="minutes">00</span>
+                <span class="time-label">Mins</span>
+            </div>
+            <div class="time-box">
+                <span class="time-value" id="seconds">00</span>
+                <span class="time-label">Secs</span>
+            </div>
+        </div>
+
+        <!-- <div class="message-card" id="message-container" onclick="triggerBurst(event)">
+            <p class="daily-message" id="message-text">Loading message...</p>
+            <p class="special-line">
+                “I’ll only message you until our college days end. After that, if you miss me, just give me a call.”
+            </p>
+        </div> -->
+
+        <div class="footer-names">For Kulsum & Munaza 💛</div>
+    </div>
+
+    <script>
+        const targetDate = new Date('March 14, 2026 00:00:00').getTime();
+
+        const messages = {
+            '2026-02-27': "The best thing about college wasn't the library or the lectures—it was finding a soulmate in a friend like you. 🌸",
+            '2026-02-28': "Every shared laughter in the canteen and every panicked study session is a treasure I'll keep forever. ✨",
+            '2026-03-01': "March is here, and so is the bittersweet feeling of saying goodbye to these walls but never to our bond. 🕊️",
+            '2026-03-02': "We walked in as strangers, but we're leaving as family. College is ending, but our story isn't. 📖",
+            '2026-03-03': "Capture every moment of these last few days. These are the memories we'll talk about for years. 📸",
+            '2026-03-04': "Don't be sad that it's ending, be happy that we lived every second of it together. 💛",
+            '2026-03-05': "A little bit of magic, a whole lot of friendship. That's what our college life was. 🪄",
+            '2026-03-06': "Even if our paths diverge after this, I know they'll always cross again. You're special, Munaza. 🌟",
+            '2026-03-07': "One week closer to the finish line. Let's make every remaining lecture count (or at least our bunking sessions)! 😂",
+            '2026-03-08': "To the girl who knows all my secrets and still chooses to be my friend—I'm going to miss seeing you every day. 🫂",
+            '2026-03-09': "The halls will feel empty without our gossip and giggles. College won't be the same, but neither will we. 🎓",
+            '2026-03-10': "Five days left. My heart is already getting heavy, but I'm so proud of how far we've come. 🏆",
+            '2026-03-11': "The countdown is getting real. Let's promise to never be 'just another contact' in each other's phones. 📱",
+            '2026-03-12': "Almost there! Almost at the end of an era. Thank you for making it beautiful. 💖",
+            '2026-03-13': "One last sunset as college students. Tomorrow everything changes, but my love for you won't. 🌅",
+            '2026-03-14': "It’s our college’s last day, Munaza 💛! We did it! Let's celebrate our journey and look forward to the future."
+        };
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance < 0) {
+                document.getElementById('days').innerHTML = "00";
+                document.getElementById('hours').innerHTML = "00";
+                document.getElementById('minutes').innerHTML = "00";
+                document.getElementById('seconds').innerHTML = "00";
+                document.getElementById('message-text').innerHTML = messages['2026-03-14'];
+                return;
+            }
+
+            const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerHTML = d.toString().padStart(2, '0');
+            document.getElementById('hours').innerHTML = h.toString().padStart(2, '0');
+            document.getElementById('minutes').innerHTML = m.toString().padStart(2, '0');
+            document.getElementById('seconds').innerHTML = s.toString().padStart(2, '0');
+        }
+
+        function displayDailyMessage() {
+            const today = new Date().toISOString().split('T')[0];
+            const msg = messages[today] || "Counting down to the big day! 💛";
+            document.getElementById('message-text').innerHTML = msg;
+        }
+
+        // Particle System
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + Math.random() * 100;
+                this.size = Math.random() * 3 + 1;
+                this.speedY = Math.random() * 1 + 0.5;
+                this.opacity = Math.random() * 0.5 + 0.2;
+            }
+            update() {
+                this.y -= this.speedY;
+                if (this.y < -10) this.reset();
+            }
+            draw() {
+                ctx.fillStyle = `rgba(255, 204, 51, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            for (let i = 0; i < 100; i++) particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        function triggerBurst(e) {
+            const count = 15;
+            for (let i = 0; i < count; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = (Math.random() > 0.5) ? '❤️' : '💖';
+                heart.style.left = (e.clientX || window.innerWidth / 2) + 'px';
+                heart.style.top = (e.clientY || window.innerHeight / 2) + 'px';
+                heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 100 + 50;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance - 100;
+
+                heart.animate([
+                    { transform: 'translate(0, 0) scale(0)', opacity: 1 },
+                    { transform: `translate(${tx}px, ${ty}px) scale(1.5)`, opacity: 0 }
+                ], {
+                    duration: 1000,
+                    easing: 'cubic-bezier(0, .9, .57, 1)',
+                    fill: 'forwards'
+                });
+
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 1000);
+            }
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+        initParticles();
+        animate();
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+        displayDailyMessage();
+    </script>
+</body>
+
+</html>
